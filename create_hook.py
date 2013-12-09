@@ -36,7 +36,8 @@ def _create_hook(token, user, repository, hook_endpoint):
         ],
         'config': {
             'url': hook_endpoint,
-            'content_type': 'json'
+            'content_type': 'json',
+            'secret': token # use token for sha1-secret-key
         },
     }
     print "Now accessing to GitHub...\n"
