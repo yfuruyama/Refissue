@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import os
 
 from similarity import document_similarity
 from igo.Tagger import Tagger
 
 
-_igo_dictionary = 'ipadic-gae'
+_igo_dictionary = os.path.join(os.path.dirname(__file__), 'ipadic-gae')
 
 
 class Issue(object):
