@@ -4,8 +4,8 @@
 import sys
 import json
 import argparse
-
-import httplib2
+import urllib
+import urllib2
 
 
 def _parse_option():
@@ -27,7 +27,6 @@ def _parse_option():
 
 
 def _create_hook(token, user, repository, hook_endpoint):
-    http = httplib2.Http()
     request_body = {
         'name': 'web',
         'active': True,
@@ -41,14 +40,18 @@ def _create_hook(token, user, repository, hook_endpoint):
         },
     }
     print "Now accessing to GitHub...\n"
-    resp, content = http.request(
+
+    req = urllib2.Request(
         'https://api.github.com/repos/%s/%s/hooks' % (user, repository),
-        'POST',
-        body=json.dumps(request_body),
-        headers={
-            'Authorization': 'token ' + token
-        })
-    return (resp, content)
+        # urllib.urlencode(json.dumps(request_body))
+        json.dumps(request_body)
+        )
+    req.add_header('Authorization', 'token ' + token)
+    try:
+        resp = urllib2.urlopen(req)
+    except urllib2.HTTPError, e:
+        resp = e
+    return (resp.code, resp.read())
 
 
 def main():
@@ -59,20 +62,19 @@ def main():
         err = 'No token attribute was found in \'%s\'' % args.credential.name
         sys.exit(err)
 
-    resp, content = _create_hook(
+    status, content = _create_hook(
         token, args.user, args.repository, args.endpoint
         )
 
-    status = resp.get('status')
-    if status == '201':
+    if status == 201:
         success = 'Success! GitHub Web-hook was created: endpoint => %s' \
             % args.endpoint
         print(success)
         sys.exit(0)
-    elif status == '422':
+    elif status == 422:
         err = 'Failure! GitHub Web-hook has already been created.'
         sys.exit(err)
-    elif status == '404':
+    elif status == 404:
         err = 'Failure! Repository \'%s/%s\' not found.' \
             % (args.user, args.repository)
         sys.exit(err)
