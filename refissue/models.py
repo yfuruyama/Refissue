@@ -5,7 +5,6 @@ import os
 import urllib
 import json
 
-from igo.Tagger import Tagger
 from google.appengine.api import memcache
 import settings
 
@@ -57,7 +56,7 @@ class Issue(object):
 
             resp, content = request_to_github(token, 'GET', url)
             if int(resp.get('status')) == 200:
-                issues = [Issue.from_dict(issue) for issue in json.loads(content)] 
+                issues = [Issue.from_dict(issue) for issue in json.loads(content)]
             else:
                 logging.error('Failed to fetch issues.')
                 logging.error(resp)
@@ -88,6 +87,6 @@ class Issue(object):
         return document_similarity(self.keywords, other.keywords)
 
 
-_analyzer = MorphemeAnalyzeros.path.join(
-    os.path.dirname(__file__), 'ipadic-gae'
+_analyzer = MorphemeAnalyzer(
+    os.path.join(os.path.dirname(__file__), 'ipadic-gae')
     )

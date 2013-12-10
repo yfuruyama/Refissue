@@ -3,6 +3,9 @@
 ### APIトークンのファイルパス
 CREDENTIAL_PATH = 'credential.json'
 
+### hook用のエンドポイントのパス
+HOOK_ENDPOINT_PATH = '/hook'
+
 ### 比較するIssueの最大件数
 MAX_COMPARE_ISSUES = 100
 

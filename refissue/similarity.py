@@ -8,7 +8,7 @@ def document_similarity(doc1, doc2):
 
 
 def _cosine_similarity(doc1, doc2):
-    merged = doc1 + doc2 
+    merged = doc1 + doc2
     unique = list(set(merged))
 
     c1 = []
@@ -19,7 +19,7 @@ def _cosine_similarity(doc1, doc2):
         c2.append(1 if d in doc2 else 0)
 
     denominator = math.sqrt(sum(c1)) * math.sqrt(sum(c2))
-    numerator = sum(map(lambda x, y: x*y, c1, c2))
+    numerator = sum(map(lambda x, y: x * y, c1, c2))
 
     if (denominator) == 0:
         return 0

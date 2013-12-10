@@ -12,6 +12,7 @@ bin
 develop-eggs
 eggs
 parts
+downloads
 
 # compiled ipadic
 refissue/ipadic-gae

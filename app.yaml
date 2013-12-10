@@ -8,7 +8,7 @@ libraries:
   version: "1.3"
 
 handlers:
-- url: /
+- url: /hook
   script: refissue.main.application
 
 builtins:
@@ -29,6 +29,7 @@ skip_files:
 - develop-eggs/
 - eggs/
 - parts/
+- downloads/
 - bootstrap.py
 - buildout.cfg
 - README.md

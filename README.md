@@ -4,14 +4,16 @@ Automatic GitHub-Issues Suggestion Tools
 
 What is this tool?
 -------------------
-This tool gives you similar issues on your repository whenever you post a new issue.
+This app gives you similar past issues on your repository whenever you post a new issue.
 
-![screenshot](https://raw.github.com/addsict/refissue/master/imgs/img1.png)
+![img](https://raw.github.com/addsict/refissue/master/imgs/img1.png)
 
 How to install
 ----------------
 
 1. Create a new application on [Google App Engine](https://appengine.google.com/).
+
+    This tool needs web-hook endpoint and currently only supported on Google App Engine.
 
 1. Build application
 
@@ -29,6 +31,8 @@ How to install
 
 1. Create a GitHub web hook. Use above created application url as hook endpoint.
 
+    The default hook endpoint is `http://YOUR_APP.appspot.com/hook`
+
     ```sh
     $ ./bin/create_hook --user=USER --repository=REPOSITORY_NAME --endpoint=HOOK_ENDPOINT
     ```
@@ -36,7 +40,7 @@ How to install
 1. Deploy your Google App Engine application
 
     ```sh
-    $ appcfg.py update -a APPLICATION_NAME .
+    $ ./parts/google_appengine/appcfg.py update -a APPLICATION_NAME .
     ```
 
 FAQ
