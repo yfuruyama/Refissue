@@ -5,6 +5,7 @@ import logging
 import json
 
 from google.appengine.api import memcache
+import settings
 
 
 def get_token():
@@ -12,7 +13,7 @@ def get_token():
     token = memcache.get(key)
     if token is None:
         credential_path = os.path.join(
-                os.path.dirname(__file__), '..', 'token.json'
+                os.path.dirname(__file__), '..', settings.CREDENTIAL_PATH
                 )
         credential = json.load(open(credential_path))
         token = str(credential.get('token')) # need converting to str

@@ -3,6 +3,9 @@
 *.swp
 *~
 
+# app lib
+lib
+
 # buildout
 .installed.cfg
 bin/buildout

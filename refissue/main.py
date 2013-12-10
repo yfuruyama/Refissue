@@ -7,11 +7,9 @@ import logging
 import json
 import hmac
 import sha
-import urllib
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'lib'))
-from igo.Tagger import Tagger
-from google.appengine.api import memcache
+from google.appengine.ext import deferred
 import settings
 
 from refissue.models import Issue
@@ -25,16 +23,16 @@ class HookHandler(webapp2.RequestHandler):
             logging.info('Request from GitHub ----------------------------------')
             event = self.request.headers.get('X-Github-Event')
             content = json.loads(self.request.body)
-            _receive_hook_event(event, content)
+            deferred.defer(_receive_hook_event, event, content, _queue='hook-event-processing')
 
     def _validate_request(self):
-        return self._is_request_from_github(self)
+        return self._is_request_from_github()
 
     def _is_request_from_github(self):
         signature = self.request.headers.get('X-Hub-Signature')
         token = get_token()
         hashed = hmac.new(token, self.request.body, sha)
-        digest = hashed.digest().encode('hex')
+        digest = hashed.hexdigest()
         if 'sha1=' + digest == signature:
             return True
         else:
@@ -65,9 +63,9 @@ def _receive_issue_event(content):
         if similarity >= settings.SIMILARITY_THRESHOLD:
             candidates.append((similarity, issue))
     if len(candidates) > 0:
-        comment = '*How about these issues?*\n'
+        comment = '*How about these issues?* by Refissue.\n'
         for (similarity, issue) in candidates:
-            comment += '> #%d (%d%%): "%s"\n' % (issue.number, similarity * 100, issue.title)
+            comment += '> #%d (%d%%) "%s"\n' % (issue.number, similarity * 100, issue.title)
         _post_comment_to_issue(owner, repository, opened_issue.number, comment)
 
     opened_issue.save(owner, repository)

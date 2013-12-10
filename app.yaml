@@ -14,5 +14,24 @@ handlers:
 builtins:
 - deferred: on
 
+skip_files:
+- ^(.*/)?app\.yaml
+- ^(.*/)?app\.yml
+- ^(.*/)?index\.yaml
+- ^(.*/)?index\.yml
+- ^(.*/)?#.*#
+- ^(.*/)?.*~
+- ^(.*/)?.*\.py[co]
+- ^(.*/)?.*/RCS/.*
+- ^(.*/)?\..*
+- ^(.*/)?.*\.bak$
+- bin/
+- develop-eggs/
+- eggs/
+- parts/
+- bootstrap.py
+- buildout.cfg
+- README.md
+
 env_variables:
   DJANGO_SETTINGS_MODULE: 'settings'

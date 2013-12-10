@@ -2,10 +2,14 @@
 
 import logging
 import os
+import urllib
+import json
 
 from igo.Tagger import Tagger
 from google.appengine.api import memcache
+import settings
 
+from refissue.auth import get_token
 from refissue.similarity import document_similarity
 from refissue.github_api import request_to_github
 
@@ -67,9 +71,9 @@ class Issue(object):
         if issues and type(issues) == list:
             issues = [issue for issue in issues if issue.id != self.id]
             issues.append(self)
-            memcache.set(key, issues, time=cls._memcache_expire)
+            memcache.set(key, issues, time=self._memcache_expire)
         else:
-            memcache.set(key, [self], time=cls._memcache_expire)
+            memcache.set(key, [self], time=self._memcache_expire)
 
     def search_most_similar_issues(self, issues, n):
         # exclude self issue from issues
