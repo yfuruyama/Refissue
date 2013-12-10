@@ -6,7 +6,7 @@ before_install:
   - python bootstrap.py
   - bin/buildout
 script:
-  - bin/py.test -v tests/morpheme_test.py
+  - bin/py.test -v tests/{morpheme_test.py,similarity.py}
 notifications:
   emails:
     - addsict@gmail.com

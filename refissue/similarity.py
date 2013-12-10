@@ -21,4 +21,7 @@ def _cosine_similarity(doc1, doc2):
     denominator = math.sqrt(sum(c1)) * math.sqrt(sum(c2))
     numerator = sum(map(lambda x, y: x*y, c1, c2))
 
-    return float(numerator) / float(denominator)
+    if (denominator) == 0:
+        return 0
+    else:
+        return float(numerator) / float(denominator)
