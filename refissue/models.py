@@ -3,11 +3,18 @@
 import logging
 import os
 
-from similarity import document_similarity
 from igo.Tagger import Tagger
+from google.appengine.api import memcache
+
+from refissue.similarity import document_similarity
+from refissue.github_api import request_to_github
 
 
 class Issue(object):
+    u""" Model of GitHub Issues """
+
+    _memcache_expire = 3600
+
     def __init__(self, id, number, title, body):
         self.id = id
         self.number = number
@@ -18,12 +25,51 @@ class Issue(object):
             )
 
     @classmethod
+    def get_memcache_key(cls, owner, repo):
+        return '%s:%s' % (owner, repo)
+
+    @classmethod
     def from_dict(cls, issue_dict):
         id = issue_dict.get('id')
         number = issue_dict.get('number')
         title = issue_dict.get('title')
         body = issue_dict.get('body')
         return cls(id, number, title, body)
+
+    @classmethod
+    def fetch_issues(cls, owner, repo, ignore_cache=False):
+        key = cls.get_memcache_key(owner, repo)
+        issues = memcache.get(key)
+        if issues is None or ignore_cache:
+            url = 'https://api.github.com/repos/%s/%s/issues' % (owner, repo)
+            params = {
+                'per_page': settings.MAX_COMPARE_ISSUES,
+                'sort': 'created',
+                'order': 'desc'
+            }
+            url += '?' + urllib.urlencode(params)
+            token = get_token()
+
+            resp, content = request_to_github(token, 'GET', url)
+            if int(resp.get('status')) == 200:
+                issues = [Issue.from_dict(issue) for issue in json.loads(content)] 
+            else:
+                logging.error('Failed to fetch issues.')
+                logging.error(resp)
+                logging.error(content)
+                issues = None
+            memcache.set(key, issues, time=cls._memcache_expire)
+        return issues
+
+    def save(self, owner, repo):
+        key = self.get_memcache_key(owner, repo)
+        issues = memcache.get(key)
+        if issues and type(issues) == list:
+            issues = [issue for issue in issues if issue.id != self.id]
+            issues.append(self)
+            memcache.set(key, issues, time=cls._memcache_expire)
+        else:
+            memcache.set(key, [self], time=cls._memcache_expire)
 
     def search_most_similar_issues(self, issues, n):
         # exclude self issue from issues
