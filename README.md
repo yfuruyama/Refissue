@@ -6,6 +6,8 @@ What is this tool?
 -------------------
 This tool gives you similar issues on your repository whenever you post a new issue.
 
+![screenshot](https://raw.github.com/addsict/refissue/master/imgs/img1.png)
+
 How to install
 ----------------
 
