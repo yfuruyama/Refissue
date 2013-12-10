@@ -32,6 +32,7 @@ skip_files:
 - bootstrap.py
 - buildout.cfg
 - README.md
+- tests
 
 env_variables:
   DJANGO_SETTINGS_MODULE: 'settings'

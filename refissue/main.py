@@ -67,6 +67,8 @@ def _receive_issue_event(content):
         for (similarity, issue) in candidates:
             comment += '> #%d (%d%%) "%s"\n' % (issue.number, similarity * 100, issue.title)
         _post_comment_to_issue(owner, repository, opened_issue.number, comment)
+    else:
+        logging.info('No similar issues found...')
 
     opened_issue.save(owner, repository)
 
