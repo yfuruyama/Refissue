@@ -1,0 +1,17 @@
+.DS_Store
+*.py[co]
+*.swp
+*~
+
+# buildout
+.installed.cfg
+bin/buildout
+develop-eggs
+eggs
+parts
+
+# compiled ipadic
+refissue/ipadic-gae
+
+# credential file
+credential.json
