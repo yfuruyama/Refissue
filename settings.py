@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ### APIトークンのファイルパス
-CREDENTIAL_PATH = 'token.json'
+CREDENTIAL_PATH = 'credential.json'
 
 ### 比較するIssueの最大件数
 MAX_COMPARE_ISSUES = 100
