@@ -9,7 +9,7 @@ import hmac
 import sha
 import urllib
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'lib'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'lib'))
 from igo.Tagger import Tagger
 from google.appengine.api import memcache
 import settings
