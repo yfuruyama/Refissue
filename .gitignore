@@ -8,7 +8,7 @@ lib
 
 # buildout
 .installed.cfg
-bin/buildout
+bin
 develop-eggs
 eggs
 parts
@@ -18,3 +18,6 @@ refissue/ipadic-gae
 
 # credential file
 credential.json
+
+# script
+!bin/create_hook
