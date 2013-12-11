@@ -21,4 +21,4 @@ refissue/ipadic-gae
 credential.json
 
 # script
-!bin/create_hook
+!bin/create_hook.py
