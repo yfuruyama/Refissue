@@ -5,19 +5,20 @@ import os
 import urllib
 import json
 
-from google.appengine.api import memcache
 import settings
 
 from refissue.auth import get_token
 from refissue.morpheme import MorphemeAnalyzer
 from refissue.similarity import document_similarity
 from refissue.github_api import request_to_github
+from refissue.util import save_by, fetch_by
 
 
 class Issue(object):
     u""" Model of GitHub Issues """
 
-    _memcache_expire = 3600
+    _temporary_store_key = '{owner}:{repo}'
+    _temporary_store_expire = 3600
 
     def __init__(self, id, number, title, body):
         self.id = id
@@ -29,10 +30,6 @@ class Issue(object):
             )
 
     @classmethod
-    def get_memcache_key(cls, owner, repo):
-        return '%s:%s' % (owner, repo)
-
-    @classmethod
     def from_dict(cls, issue_dict):
         id = issue_dict.get('id')
         number = issue_dict.get('number')
@@ -42,8 +39,8 @@ class Issue(object):
 
     @classmethod
     def fetch_issues(cls, owner, repo, ignore_cache=False):
-        key = cls.get_memcache_key(owner, repo)
-        issues = memcache.get(key)
+        key = cls._temporary_store_key.format(owner=owner, repo=repo)
+        issues = fetch_by(key)
         if issues is None or ignore_cache:
             url = 'https://api.github.com/repos/%s/%s/issues' % (owner, repo)
             params = {
@@ -56,24 +53,25 @@ class Issue(object):
 
             resp, content = request_to_github(token, 'GET', url)
             if int(resp.get('status')) == 200:
-                issues = [Issue.from_dict(issue) for issue in json.loads(content)]
+                issues_dict = json.loads(content)
+                issues = [Issue.from_dict(issue) for issue in issues_dict]
             else:
                 logging.error('Failed to fetch issues.')
                 logging.error(resp)
                 logging.error(content)
                 issues = None
-            memcache.set(key, issues, time=cls._memcache_expire)
+            save_by(key, issues, time=cls._temporary_store_expire)
         return issues
 
     def save(self, owner, repo):
-        key = self.get_memcache_key(owner, repo)
-        issues = memcache.get(key)
+        key = self._temporary_store_key.format(owner=owner, repo=repo)
+        issues = fetch_by(key)
         if issues and type(issues) == list:
             issues = [issue for issue in issues if issue.id != self.id]
             issues.append(self)
-            memcache.set(key, issues, time=self._memcache_expire)
         else:
-            memcache.set(key, [self], time=self._memcache_expire)
+            issues = [self]
+        save_by(key, issues, time=self._temporary_store_expire)
 
     def search_most_similar_issues(self, issues, n):
         # exclude self issue from issues
