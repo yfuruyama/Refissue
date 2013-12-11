@@ -49,7 +49,7 @@ How to install
 1. Deploy your Google App Engine application.
 
     ```sh
-    $ ./parts/google_appengine/appcfg.py update -a APPLICATION_NAME .
+    $ ./parts/google_appengine/appcfg.py update --application APPLICATION_NAME .
     ```
 
 FAQ
