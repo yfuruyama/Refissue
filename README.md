@@ -1,6 +1,6 @@
 Refissue
 =========
-Automatic GitHub-Issues Suggestion Tools
+Automatic Similar GitHub Issues Discovery Tools
 
 What is this?
 -------------------
