@@ -32,7 +32,7 @@ def save_by(key, value, store=None, **kwargs):
         from google.appengine.api import memcache
         memcache.set(key, value, **kwargs)
     else:
-        _default_store.set(key, value)
+        _default_store[key] = value
 
 
 def fetch_by(key, store=None):
