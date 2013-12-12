@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'lib'))
 from google.appengine.ext import deferred
 import settings
 
-from refissue.models import Issue
+from refissue.issue import Issue
 from refissue.auth import get_token
 from refissue.github_api import request_to_github
 
