@@ -76,6 +76,8 @@ class Issue(object):
     def search_most_similar_issues(self, issues, n):
         # exclude self issue from issues
         issues = [issue for issue in issues if issue.id != self.id]
+        if len(issues) == 0:
+            return []
         results = [(self.compare(issue), issue) for issue in issues]
         results.sort(cmp=lambda a, b: cmp(a[0], b[0]))
         results.reverse()
