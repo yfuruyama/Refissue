@@ -2,12 +2,14 @@ Refissue
 =========
 Automatic Similar GitHub Issues Discovery Tools
 
+
 What is this?
 -------------------
 This tool gives you similar past issues on your repository whenever you post a new issue.  
 You can find similar issues instantly and check if there exisits duplicate ones.
 
 ![img](https://raw.github.com/addsict/refissue/master/imgs/img1.png)
+
 
 How to install
 ----------------
@@ -51,6 +53,13 @@ How to install
     ```sh
     $ ./parts/google_appengine/appcfg.py update --application APPLICATION_NAME .
     ```
+
+
+How to use
+-----------
+If you finish installing the Refissue, then just post new issue to your GitHub repository.  
+A short time later, analyzed results will be posted to that issue if there exists similar ones.
+
 
 FAQ
 -----
