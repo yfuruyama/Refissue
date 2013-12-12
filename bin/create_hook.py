@@ -4,8 +4,8 @@
 import sys
 import json
 import argparse
-import urllib
 import urllib2
+import re
 
 
 def _parse_option():
@@ -23,7 +23,25 @@ def _parse_option():
         '-c', '--credential', nargs='?', type=argparse.FileType('r'),
         default='credential.json'
         )
-    return parser.parse_args()
+
+    option = parser.parse_args()
+    has_error, err = _validate_option(option)
+    if has_error:
+        sys.exit('Failure! ' + err)
+    else:
+        return option
+
+
+def _validate_option(option):
+    has_error = False
+    err = 'No error'
+    if re.match(r'^.*/.*$', option.user):
+        has_error = True
+        err = '-u[--user] option must NOT have \'/\''
+    elif re.match(r'^.*/.*$', option.repository):
+        has_error = True
+        err = '-r[--repository] option must NOT have \'/\''
+    return has_error, err
 
 
 def _create_hook(token, user, repository, hook_endpoint):
@@ -36,14 +54,13 @@ def _create_hook(token, user, repository, hook_endpoint):
         'config': {
             'url': hook_endpoint,
             'content_type': 'json',
-            'secret': token # use token for sha1-secret-key
+            'secret': token  # use token for sha1-secret-key
         },
     }
-    print "Now accessing to GitHub...\n"
+    print "Now accessing to GitHub..."
 
     req = urllib2.Request(
         'https://api.github.com/repos/%s/%s/hooks' % (user, repository),
-        # urllib.urlencode(json.dumps(request_body))
         json.dumps(request_body)
         )
     req.add_header('Authorization', 'token ' + token)
@@ -67,9 +84,16 @@ def main():
         )
 
     if status == 201:
-        success = 'Success! GitHub Web-hook was created: endpoint => %s' \
-            % args.endpoint
-        print(success)
+        from textwrap import dedent
+        success = """
+            Success! GitHub Web-hook was created!
+            user: {user}
+            repository: {repository}
+            endpoint: {endpoint}""".format(user=args.user,
+                                           repository=args.repository,
+                                           endpoint=args.endpoint
+                                           )
+        print(dedent(success))
         sys.exit(0)
     elif status == 422:
         err = 'Failure! GitHub Web-hook has already been created.'
