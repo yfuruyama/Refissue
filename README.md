@@ -5,7 +5,7 @@ Automatic Similar GitHub Issues Discovery Tools
 
 What is this?
 -------------------
-This tool gives you similar past issues on your repository whenever you post a new issue.  
+This tool gives you similar past issues on your repository when you post a new issue.  
 You can find similar issues instantly and check if there exisits duplicate ones.
 
 ![img](https://raw.github.com/addsict/refissue/master/imgs/img1.png)
@@ -29,7 +29,7 @@ How to install
     $ ./bin/buildout
     ```
 
-1. Generate a GitHub personal API token by using curl(wget, etc) command and store it into `credential.json`.
+1. Generate a GitHub personal API token by using curl command(or wget, etc) and store it into `credential.json`.
 
     ```sh
     # Enter your GitHub user name into `USER`.
@@ -38,14 +38,14 @@ How to install
 
 1. Create a new application on [Google App Engine](https://appengine.google.com/).
 
-    This tool needs web-hook endpoint and currently only supported on Google App Engine.
+    This tool needs a web-hook endpoint and currently only supported on Google App Engine.
 
 1. Create a GitHub web-hook. Use above created application url as hook endpoint.
 
     The hook endpoint path must be ended with `/hook`(You can change the endpoint path in settings.py).
 
     ```sh
-    $ python ./bin/create_hook.py --user=USER --repository=REPOSITORY_NAME --endpoint=HOOK_ENDPOINT
+    $ ./bin/create_hook --user=USER --repository=REPOSITORY_NAME --endpoint=HOOK_ENDPOINT
     ```
 
 1. Deploy your Google App Engine application.
@@ -57,7 +57,7 @@ How to install
 
 How to use
 -----------
-If you finish installing the Refissue, then just post new issue to your GitHub repository.  
+When you finish installing the Refissue, then just post new issue to your GitHub repository.  
 A short time later, analyzed results will be posted to that issue if there exists similar ones.
 
 
