@@ -2,6 +2,7 @@
 *.py[co]
 *.swp
 *~
+*.egg-info
 
 # app lib
 lib
@@ -19,6 +20,3 @@ refissue/ipadic-gae
 
 # credential file
 credential.json
-
-# script
-!bin/create_hook.py
